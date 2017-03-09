@@ -22,7 +22,7 @@ function setup() {
 	osc.start();
 	osc.amp(0);
     
-    
+    face = loadImage("/sam.png"); 
     
 	var numDots = 40;
 
@@ -38,6 +38,8 @@ function draw() {
 	noStroke();
 	// rect(0, 0, width, height);
 	background(255, 230);
+    
+    
 
 	// if (drawRippleFromElsewhere) {
 	// 	for (var i = 0; i < ripplesFromElsewhere.length; ++i) {
@@ -92,6 +94,7 @@ function Ripple(count, color, x, y, note, origin) {
     
     var samWidth; 
     var samHeight; 
+    
 
 	this.move = function() {
 
@@ -99,7 +102,10 @@ function Ripple(count, color, x, y, note, origin) {
 		this.posY += (mouseY - this.posY)*easing;
 
 		fill(color);
+        noFill(); 
 		ellipse(this.posX, this.posY, this.r, this.r);
+        image(face, this.posX, this.posY, this.r, this.r); 
+
 		// this.posX = posX;
 		// this.posY = posY;
 		this.lifeTime ++;
