@@ -11,7 +11,7 @@ var ripplesFromElsewhere = [];
 var ripples = [];
 var dots = [];
 
-var face; 
+var face;
 // var notes = [54, 56, 58, 60, 62, 64, 65, 67, 69, 71, 73, 75, 77, 80];
 var osc;
 
@@ -21,9 +21,9 @@ function setup() {
 	osc = new p5.TriOsc();
 	osc.start();
 	osc.amp(0);
-    
-    
-    
+
+
+
 	var numDots = 40;
 
 	for(var i=0; i < numDots; i++) {
@@ -39,21 +39,24 @@ function draw() {
 	// rect(0, 0, width, height);
 	background(255, 230);
 
-	// if (drawRippleFromElsewhere) {
-	// 	for (var i = 0; i < ripplesFromElsewhere.length; ++i) {
-	// 		ripplesFromElsewhere[i].move();
-	// 	}
-	// }
+	if (drawRippleFromElsewhere) {
+		for (var i = 0; i < ripplesFromElsewhere.length; ++i) {
+			ripplesFromElsewhere[i].show();
+		}
+	}
+
 	for(var j=0; j < dots.length; j++) {
 		dots[j].draw();
 	}
 
 	for (var i = 0; i < ripples.length; ++i) {
-		ripples[i].move();
-        
-        for (var x = 0; x < dots.length; x++){ 
-                ripples[i].grow(dots[x]); 
-        }; 
+		var rip = ripples[i];
+		rip.move();
+		sendDrawings(rip.color, rip.posX, rip.posY, rip.r);
+
+        for (var x = 0; x < dots.length; x++){
+                ripples[i].grow(dots[x]);
+        }
 	}
 
 
@@ -72,26 +75,31 @@ function mousePressed() {
 	circleX = mouseX;
 	circleY = mouseY;
 	maxRadius = random(70, 90);
+	var width = 50;
 
-	var randomNote = Math.floor(Math.random()*(80-50+1)) + 50;
+	// var randomNote = Math.floor(Math.random()*(80-50+1)) + 50;
 
-	ripples.push(new Ripple(maxRadius, shapeColor, circleX, circleY, randomNote, "fromClick"));
-	sendDrawings(maxRadius, shapeColor, circleX, circleY, randomNote);
+	ripples.push(new Ripple(shapeColor, circleX, circleY, width, "fromClick"));
 
 }
 
-function Ripple(count, color, x, y, note, origin) {
-	this.count = count;
+function Ripple(color, x, y, width, origin) {
 	var draw = true;
 	var i = 10;
+	this.color = color;
 
 	var easing = 0.06;
 	this.posX = windowWidth/2;
 	this.posY = windowHeight/2;
-	this.r = 50;
-    
-    var samWidth; 
-    var samHeight; 
+	this.r = width;
+
+    var samWidth;
+    var samHeight;
+
+	this.show = function() {
+		fill(color);
+		ellipse(this.posX, this.posY, this.r, this.r);
+	};
 
 	this.move = function() {
 
@@ -104,18 +112,18 @@ function Ripple(count, color, x, y, note, origin) {
 		// this.posY = posY;
 		this.lifeTime ++;
 	};
-    
-    this.grow = function(someRipple) { 
-        if (abs(this.posX - someRipple.x) < (this.r/2 + someRipple.r/2) && abs(this.posY - someRipple.y) < (this.r/2 + someRipple.r/2)) { 
-            console.log("HIT"); 
-            this.r += someRipple.r/2; 
-            someRipple.r = 0; 
 
-        }; 
-        
-     
-    }; 
-    
+    this.grow = function(someRipple) {
+        if (abs(this.posX - someRipple.x) < (this.r/2 + someRipple.r/2) && abs(this.posY - someRipple.y) < (this.r/2 + someRipple.r/2)) {
+            // console.log("HIT");
+            this.r += someRipple.r/2;
+            someRipple.r = 0;
+
+        }
+
+
+    };
+
 }
 
 function Dot(color) {
@@ -128,9 +136,9 @@ function Dot(color) {
 		fill(color);
 		ellipse(this.x, this.y, this.r, this.r);
 	};
-    
-   
-    
+
+
+
 
 }
 
@@ -180,14 +188,13 @@ function playSound(note, duration) {
 
 // *** sockets *** //
 
-function sendDrawings(count, color, x, y, n) {
+function 	sendDrawings(shapeColor, circleX, circleY, width) {
 
 	var data = {
-		maxRadius: count,
-		shapeColor: color,
-		circleX: x,
-		circleY: y,
-		note: n
+		shapeColor: shapeColor,
+		circleX: circleX,
+		circleY: circleY,
+		r: width
 	};
 
 	socket.emit("drawing", data);
@@ -198,11 +205,11 @@ socket.on("drawFromOtherClients", function(data) {
 
 	drawRippleFromElsewhere = true;
 	dataFromElsewhere = data;
-	ripplesFromElsewhere.push(new Ripple(dataFromElsewhere.maxRadius,
+	ripplesFromElsewhere.push(new Ripple(
 						   dataFromElsewhere.shapeColor,
 						   dataFromElsewhere.circleX,
 						   dataFromElsewhere.circleY,
-						   dataFromElsewhere.note,
+						   dataFromElsewhere.r,
 						   "fromClients"));
 });
 
