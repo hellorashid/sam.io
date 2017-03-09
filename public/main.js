@@ -15,6 +15,8 @@ var face;
 // var notes = [54, 56, 58, 60, 62, 64, 65, 67, 69, 71, 73, 75, 77, 80];
 var osc;
 
+var beginGame = true;
+
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	// start silent
@@ -22,7 +24,7 @@ function setup() {
 	osc.start();
 	osc.amp(0);
 
-
+    face = loadImage("/sam.png");
 
 	var numDots = 40;
 
@@ -38,6 +40,8 @@ function draw() {
 	noStroke();
 	// rect(0, 0, width, height);
 	background(255, 230);
+
+
 
 	if (drawRippleFromElsewhere) {
 		for (var i = 0; i < ripplesFromElsewhere.length; ++i) {
@@ -71,16 +75,14 @@ function randomColor() {
 }
 
 function mousePressed() {
+
 	shapeColor = randomColor();
 	circleX = mouseX;
 	circleY = mouseY;
 	maxRadius = random(70, 90);
 	var width = 50;
 
-	// var randomNote = Math.floor(Math.random()*(80-50+1)) + 50;
-
 	ripples.push(new Ripple(shapeColor, circleX, circleY, width, "fromClick"));
-
 }
 
 function Ripple(color, x, y, width, origin) {
@@ -107,7 +109,10 @@ function Ripple(color, x, y, width, origin) {
 		this.posY += (mouseY - this.posY)*easing;
 
 		fill(color);
+        noFill();
 		ellipse(this.posX, this.posY, this.r, this.r);
+        image(face, this.posX, this.posY, this.r, this.r);
+
 		// this.posX = posX;
 		// this.posY = posY;
 		this.lifeTime ++;
