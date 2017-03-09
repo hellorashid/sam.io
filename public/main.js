@@ -23,18 +23,19 @@ function setup() {
 }
 
 function draw() {
-	fill(255, 80);
+	// fill(255, 80);
 	noStroke();
-	rect(0, 0, width, height);
+	// rect(0, 0, width, height);
+	background(255, 230);
 
-	if (drawRippleFromElsewhere) {
-		for (var i = 0; i < ripplesFromElsewhere.length; ++i) {
-			ripplesFromElsewhere[i].drawRipple();
-		}
-	}
+	// if (drawRippleFromElsewhere) {
+	// 	for (var i = 0; i < ripplesFromElsewhere.length; ++i) {
+	// 		ripplesFromElsewhere[i].move();
+	// 	}
+	// }
 
 	for (var i = 0; i < ripples.length; ++i) {
-		ripples[i].drawRipple();
+		ripples[i].move();
 	}
 
 }
@@ -65,36 +66,54 @@ function Ripple(count, color, x, y, note, origin) {
 	var draw = true;
 	var i = 10;
 
-	playSound(note, this.count/60.0);
+	var easing = 0.06;
+	this.posX = windowWidth/2;
+	this.posY = windowHeight/2;
+	var width = 50;
 
-	this.drawRipple = function() {
+	this.move = function() {
 
-		if (draw) {
-			noStroke();
-			fill(color[0], color[1], color[2], 255-i*3);
-			ellipse(x, y, i, i);
-			// ellipse(x, y, i-30, i-30);
-			fill(color[0], color[1], color[2], 255-i*2);
-			ellipse(x, y, i-15, i-15);
-			fill(color[0], color[1], color[2], 255-i);
-			ellipse(x, y, i-30, i-30);
+		this.posX += (mouseX - this.posX)*easing;
+		this.posY += (mouseY - this.posY)*easing;
 
-			i+=0.3;
-
-			if (i > this.count) {
-				draw = false;
-				// remove this particular ripple from array
-				if (origin === "fromClick") {
-					var index = ripples.indexOf(this);
-					ripples.splice(index,1);
-				} else if (origin === "fromClients") {
-					var index = ripplesFromElsewhere.indexOf(this);
-					ripplesFromElsewhere.splice(index,1);
-				}
-			}
-
-		}
+		fill(color);
+		ellipse(this.posX, this.posY, width, width);
+		// this.posX = posX;
+		// this.posY = posY;
+		this.lifeTime ++;
 	};
+
+
+	// playSound(note, this.count/60.0);
+	//
+	// this.drawRipple = function() {
+	//
+	// 	if (draw) {
+	// 		noStroke();
+	// 		fill(color[0], color[1], color[2], 255-i*3);
+	// 		ellipse(x, y, i, i);
+	// 		// ellipse(x, y, i-30, i-30);
+	// 		fill(color[0], color[1], color[2], 255-i*2);
+	// 		ellipse(x, y, i-15, i-15);
+	// 		fill(color[0], color[1], color[2], 255-i);
+	// 		ellipse(x, y, i-30, i-30);
+	//
+	// 		i+=0.3;
+	//
+	// 		if (i > this.count) {
+	// 			draw = false;
+	// 			// remove this particular ripple from array
+	// 			if (origin === "fromClick") {
+	// 				var index = ripples.indexOf(this);
+	// 				ripples.splice(index,1);
+	// 			} else if (origin === "fromClients") {
+	// 				var index = ripplesFromElsewhere.indexOf(this);
+	// 				ripplesFromElsewhere.splice(index,1);
+	// 			}
+	// 		}
+
+		// }
+	// };
 }
 
 function playSound(note, duration) {
