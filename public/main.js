@@ -9,6 +9,7 @@ var dataFromElsewhere = {};
 var ripplesFromElsewhere = [];
 
 var ripples = [];
+var dots = [];
 
 // var notes = [54, 56, 58, 60, 62, 64, 65, 67, 69, 71, 73, 75, 77, 80];
 var osc;
@@ -20,6 +21,14 @@ function setup() {
 	osc = new p5.TriOsc();
 	osc.start();
 	osc.amp(0);
+
+	var numDots = 40;
+
+	for(var i=0; i < numDots; i++) {
+		var c = randomColor();
+		dots.push(new Dot(c));
+	}
+
 }
 
 function draw() {
@@ -33,10 +42,15 @@ function draw() {
 	// 		ripplesFromElsewhere[i].move();
 	// 	}
 	// }
+	for(var j=0; j < dots.length; j++) {
+		dots[j].draw();
+	}
 
 	for (var i = 0; i < ripples.length; ++i) {
 		ripples[i].move();
 	}
+
+
 
 }
 
@@ -82,7 +96,19 @@ function Ripple(count, color, x, y, note, origin) {
 		// this.posY = posY;
 		this.lifeTime ++;
 	};
+}
 
+function Dot(color) {
+	var randomX = Math.floor(Math.random()*(windowWidth-50) + 50);
+	var randomY = Math.floor(Math.random()*(windowHeight-50) + 50);
+	var randomR = Math.floor(Math.random()*(20) + 10);
+
+	this.draw = function() {
+		fill(color);
+		ellipse(randomX, randomY, randomR, randomR);
+	};
+
+}
 
 	// playSound(note, this.count/60.0);
 	//
@@ -114,7 +140,6 @@ function Ripple(count, color, x, y, note, origin) {
 
 		// }
 	// };
-}
 
 function playSound(note, duration) {
 	osc.freq(midiToFreq(note));
