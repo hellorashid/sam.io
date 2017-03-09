@@ -99,13 +99,13 @@ function Ripple(count, color, x, y, note, origin) {
 }
 
 function Dot(color) {
-	var randomX = Math.floor(Math.random()*(windowWidth-50) + 50);
-	var randomY = Math.floor(Math.random()*(windowHeight-50) + 50);
-	var randomR = Math.floor(Math.random()*(20) + 10);
+	this.x = Math.floor(Math.random()*(windowWidth-50) + 50);
+	this.y = Math.floor(Math.random()*(windowHeight-50) + 50);
+	this.r = Math.floor(Math.random()*(20) + 10);
 
 	this.draw = function() {
 		fill(color);
-		ellipse(randomX, randomY, randomR, randomR);
+		ellipse(this.x, this.y, this.r, this.r);
 	};
 
 }
