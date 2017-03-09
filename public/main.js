@@ -11,17 +11,19 @@ var ripplesFromElsewhere = [];
 var ripples = [];
 var dots = [];
 
+var face; 
 // var notes = [54, 56, 58, 60, 62, 64, 65, 67, 69, 71, 73, 75, 77, 80];
 var osc;
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
-
 	// start silent
 	osc = new p5.TriOsc();
 	osc.start();
 	osc.amp(0);
-
+    
+    
+    
 	var numDots = 40;
 
 	for(var i=0; i < numDots; i++) {
@@ -48,8 +50,11 @@ function draw() {
 
 	for (var i = 0; i < ripples.length; ++i) {
 		ripples[i].move();
+        
+        for (var x = 0; x < dots.length; x++){ 
+                ripples[i].grow(dots[x]); 
+        }; 
 	}
-
 
 
 }
@@ -83,7 +88,7 @@ function Ripple(count, color, x, y, note, origin) {
 	var easing = 0.06;
 	this.posX = windowWidth/2;
 	this.posY = windowHeight/2;
-	var width = 50;
+	this.r = 50;
     
     var samWidth; 
     var samHeight; 
@@ -94,11 +99,23 @@ function Ripple(count, color, x, y, note, origin) {
 		this.posY += (mouseY - this.posY)*easing;
 
 		fill(color);
-		ellipse(this.posX, this.posY, width, width);
+		ellipse(this.posX, this.posY, this.r, this.r);
 		// this.posX = posX;
 		// this.posY = posY;
 		this.lifeTime ++;
 	};
+    
+    this.grow = function(someRipple) { 
+        if (abs(this.posX - someRipple.x) < (this.r/2 + someRipple.r/2) && abs(this.posY - someRipple.y) < (this.r/2 + someRipple.r/2)) { 
+            console.log("HIT"); 
+            this.r += someRipple.r/2; 
+            someRipple.r = 0; 
+
+        }; 
+        
+     
+    }; 
+    
 }
 
 function Dot(color) {
@@ -112,14 +129,7 @@ function Dot(color) {
 		ellipse(this.x, this.y, this.r, this.r);
 	};
     
-      this.grow = function(someRipple) { 
-        if (someRipple.posX === this.posX && someRipple.posY) { 
-        
-        }
-        
-        width += 10; 
-        
-    }; 
+   
     
 
 }
