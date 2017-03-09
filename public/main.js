@@ -18,7 +18,7 @@ var osc;
 var beginGame = true;
 
 function setup() {
-	createCanvas(windowWidth, windowHeight);
+	createCanvas(windowWidth*2, windowHeight*2);
 	// start silent
 	osc = new p5.TriOsc();
 	osc.start();
@@ -26,7 +26,7 @@ function setup() {
 
     face = loadImage("/sam.png");
 
-	var numDots = 40;
+	var numDots = 150;
 
 	for(var i=0; i < numDots; i++) {
 		var c = randomColor();
@@ -75,14 +75,19 @@ function randomColor() {
 }
 
 function mousePressed() {
+	if (beginGame) {
 
-	shapeColor = randomColor();
-	circleX = mouseX;
-	circleY = mouseY;
-	maxRadius = random(70, 90);
-	var width = 50;
+		shapeColor = randomColor();
+		circleX = mouseX;
+		circleY = mouseY;
+		maxRadius = random(70, 90);
+		var width = 50;
 
-	ripples.push(new Ripple(shapeColor, circleX, circleY, width, "fromClick"));
+		ripples.push(new Ripple(shapeColor, circleX, circleY, width, "fromClick"));
+
+		beginGame = false;
+	}
+
 }
 
 function Ripple(color, x, y, width, origin) {
@@ -109,8 +114,8 @@ function Ripple(color, x, y, width, origin) {
 		this.posY += (mouseY - this.posY)*easing;
 
 		fill(color);
-        noFill();
-		ellipse(this.posX, this.posY, this.r, this.r);
+    //     noFill();
+		// ellipse(this.posX, this.posY, this.r, this.r);
         image(face, this.posX, this.posY, this.r, this.r);
 
 		// this.posX = posX;
@@ -132,19 +137,17 @@ function Ripple(color, x, y, width, origin) {
 }
 
 function Dot(color) {
-	this.x = Math.floor(Math.random()*(windowWidth-50) + 50);
-	this.y = Math.floor(Math.random()*(windowHeight-50) + 50);
+	this.x = Math.floor(Math.random()*(windowWidth*2-50) + 50);
+	this.y = Math.floor(Math.random()*(windowHeight*2-50) + 50);
 	this.r = Math.floor(Math.random()*(20) + 10);
 
 
 	this.draw = function() {
 		fill(color);
 		ellipse(this.x, this.y, this.r, this.r);
+		// image(face, this.x, this.y, this.r, this.r);
+
 	};
-
-
-
-
 }
 
 
