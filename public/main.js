@@ -70,6 +70,9 @@ function Ripple(count, color, x, y, note, origin) {
 	this.posX = windowWidth/2;
 	this.posY = windowHeight/2;
 	var width = 50;
+    
+    var samWidth; 
+    var samHeight; 
 
 	this.move = function() {
 
@@ -83,6 +86,15 @@ function Ripple(count, color, x, y, note, origin) {
 		this.lifeTime ++;
 	};
 
+    this.grow = function(someRipple) { 
+        if (someRipple.posX === this.posX && someRipple.posY) { 
+        
+        }
+        
+        width += 10; 
+        
+    }; 
+    
 
 	// playSound(note, this.count/60.0);
 	//
